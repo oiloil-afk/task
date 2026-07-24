@@ -1,0 +1,131 @@
+﻿@model LoginForm.Models.Employee
+
+<div class="container mt-5 card">
+    <h2 class="mb-3">Delete Employee</h2>
+
+    <div class=" mb-4">
+        <div>
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label class="form-label"><strong>Employee Code:</strong></label>
+                </div>
+                <div class="col-md-8">
+                    <p>@Model.EmployeeCode</p>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label class="form-label"><strong>Name:</strong></label>
+                </div>
+                <div class="col-md-8">
+                    <p>@Model.Name</p>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label class="form-label"><strong>Email:</strong></label>
+                </div>
+                <div class="col-md-8">
+                    <p>@Model.Email</p>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label class="form-label"><strong>Phone:</strong></label>
+                </div>
+                <div class="col-md-8">
+                    <p>@Model.Phone</p>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label class="form-label"><strong>Age:</strong></label>
+                </div>
+                <div class="col-md-8">
+                    <p>@Model.Age</p>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label class="form-label"><strong>Date of Birth:</strong></label>
+                </div>
+                <div class="col-md-8">
+                    <p>@Model.DateOfBirth</p>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label class="form-label"><strong>Date of Joining:</strong></label>
+                </div>
+                <div class="col-md-8">
+                    <p>@Model.DateOfJoining</p>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label class="form-label"><strong>Office Time:</strong></label>
+                </div>
+                <div class="col-md-8">
+                    <p>@Model.OfficeTime</p>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label class="form-label"><strong>Gender:</strong></label>
+                </div>
+                <div class="col-md-8">
+                    <p>@Model.Gender</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form>
+        <input type="hidden" id="employeeId" value="@Model.Id" />
+        <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-8">
+                <button type="button" class="btn btn-danger" id="deleteBtn">Delete</button>
+                <a asp-controller="Employee" asp-action="Index" class="btn btn-secondary">Back</a>
+            </div>
+        </div>
+    </form>
+
+    @section Scripts
+    {
+        <script>
+                $(document).ready(function () {
+                    $("#deleteBtn").click(function () {
+                        if (confirm("Are you sure you want to delete this employee?")) {
+                            var employeeId = $("#employeeId").val();
+
+                            $.ajax({
+                                url: "/Employee/Delete",
+                                type: "POST",
+                                data: { id: employeeId },
+                                success: function (response) {
+                                    if (response.success) {
+                                        alert("Employee deleted successfully");
+                                        window.location.href = "/Employee/Index";
+                                    } else {
+                                        alert(response.message || "Error while deleting employee");
+                                    }
+                                },
+                                error: function () {
+                                    alert("Error while deleting employee");
+                                }
+                            });
+                        }
+                    });
+                });
+        </script>
+    }
+</div>

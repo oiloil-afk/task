@@ -1,0 +1,251 @@
+﻿@* @model Task2.ViewModel.CreateEmployeeViewModel
+
+<table class="table table-bordered" id="educationTable">
+    <thead class="table-dark">
+        <tr>
+            <th>Institution</th>
+            <th>Degree</th>
+            <th>Percentage</th>
+            <th>Year</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+    <tbody id="educationTableBody">
+        @for (int i = 0; i < Model.EducationDetails.Count; i++)
+        {
+            var edu = Model.EducationDetails[i];
+            <tr>
+                <td><input type="text" class="form-control edu-institution" value="@edu.Institution" /></td>
+                <td><input type="text" class="form-control edu-degree" value="@edu.Degree" /></td>
+                <td><input type="number" class="form-control edu-percentage" step="0.01" value="@edu.Percentage" /></td>
+                <td><input type="number" class="form-control edu-year" value="@edu.YearOfPassing" /></td>
+                <td><input type="date" class="form-control edu-from" value="@(edu.From?.ToString("yyyy-MM-dd"))" /></td>
+                <td><input type="date" class="form-control edu-to" value="@(edu.To?.ToString("yyyy-MM-dd"))" /></td>
+                <td><button type="button" class="btn btn-danger btn-sm btn-delete">Delete</button></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div id="hiddenFields"></div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const tableBody = document.getElementById('educationTableBody');
+    const hiddenFields = document.getElementById('hiddenFields');
+
+    tableBody.addEventListener('click', function (e) {
+        if (e.target.classList.contains('btn-delete')) {
+            e.target.closest('tr').remove();
+            updateHiddenFields();
+        }
+    });
+
+    function updateHiddenFields() {
+        hiddenFields.innerHTML = "";
+        let rows = tableBody.querySelectorAll('tr');
+
+        rows.forEach(function (row, index) {
+            let institution = row.querySelector('.edu-institution').value;
+            let degree = row.querySelector('.edu-degree').value;
+            let percentage = row.querySelector('.edu-percentage').value;
+            let year = row.querySelector('.edu-year').value;
+            let from = row.querySelector('.edu-from').value;
+            let to = row.querySelector('.edu-to').value;
+
+            hiddenFields.innerHTML += `
+                <input type="hidden" name="EducationDetails[${index}].Institution" value="${institution}" />
+                <input type="hidden" name="EducationDetails[${index}].Degree" value="${degree}" />
+                <input type="hidden" name="EducationDetails[${index}].Percentage" value="${percentage}" />
+                <input type="hidden" name="EducationDetails[${index}].YearOfPassing" value="${year}" />
+                <input type="hidden" name="EducationDetails[${index}].From" value="${from}" />
+                <input type="hidden" name="EducationDetails[${index}].To" value="${to}" /> `;
+        });
+    }
+
+    tableBody.addEventListener('change', function (e) {
+        if (e.target.classList.contains('edu-institution') ||
+            e.target.classList.contains('edu-degree') ||
+            e.target.classList.contains('edu-percentage') ||
+            e.target.classList.contains('edu-year') ||
+            e.target.classList.contains('edu-from') ||
+            e.target.classList.contains('edu-to')) {
+            updateHiddenFields();
+        }
+    });
+
+    updateHiddenFields();
+
+    let form = document.querySelector('form');
+    if (form) {
+        form.addEventListener('submit', function () {
+            updateHiddenFields();
+        });
+    }
+});
+</script> *@
+@model Task2.ViewModel.CreateEmployeeViewModel
+
+<table class="table table-bordered" id="educationTable">
+    <thead class="table-dark">
+        <tr>
+            <th>Institution</th>
+            <th>Degree</th>
+            <th>Percentage</th>
+            <th>Year</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+
+    <tbody id="educationTableBody">
+
+        @for (int i = 0; i < Model.EducationDetails.Count; i++)
+        {
+            <tr>
+
+                <td>
+                    <input asp-for="EducationDetails[@i].Id" type="hidden" />
+                    <input asp-for="EducationDetails[@i].Institution" class="form-control" />
+                </td>
+
+                <td>
+                    <input asp-for="EducationDetails[@i].Degree" class="form-control" />
+                </td>
+
+                <td>
+                    <input asp-for="EducationDetails[@i].Percentage" class="form-control" />
+                </td>
+
+                <td>
+                    <input asp-for="EducationDetails[@i].YearOfPassing" class="form-control" />
+                </td>
+
+                <td>
+                    <input asp-for="EducationDetails[@i].From"
+                           type="date"
+                           class="form-control" />
+                </td>
+
+                <td>
+                    <input asp-for="EducationDetails[@i].To"
+                           type="date"
+                           class="form-control" />
+                </td>
+
+                <td>
+                    <button type="button"
+                            class="btn btn-danger btn-delete">
+                        Delete
+                    </button>
+                </td>
+
+            </tr>
+        }
+
+    </tbody>
+</table>
+
+<button type="button"
+        class="btn btn-success"
+        id="addEducation">
+    Add Education
+</button>
+
+<script>
+
+    $(document).ready(function () {
+
+        $("#educationTable").on("click", ".btn-delete", function () {
+
+            $(this).closest("tr").remove();
+
+            reIndex();
+
+        });
+
+        $("#addEducation").click(function () {
+
+            var index = $("#educationTableBody tr").length;
+
+            var row = `
+            <tr>
+
+                <td>
+                    <input type="hidden"
+                           name="EducationDetails[${index}].Id"
+                           value="00000000-0000-0000-0000-000000000000"/>
+
+                    <input class="form-control"
+                           name="EducationDetails[${index}].Institution"/>
+                </td>
+
+                <td>
+                    <input class="form-control"
+                           name="EducationDetails[${index}].Degree"/>
+                </td>
+
+                <td>
+                    <input class="form-control"
+                           name="EducationDetails[${index}].Percentage"/>
+                </td>
+
+                <td>
+                    <input class="form-control"
+                           name="EducationDetails[${index}].YearOfPassing"/>
+                </td>
+
+                <td>
+                    <input type="date"
+                           class="form-control"
+                           name="EducationDetails[${index}].From"/>
+                </td>
+
+                <td>
+                    <input type="date"
+                           class="form-control"
+                           name="EducationDetails[${index}].To"/>
+                </td>
+
+                <td>
+                    <button type="button"
+                            class="btn btn-danger btn-delete">
+                        Delete
+                    </button>
+                </td>
+
+            </tr>`;
+
+            $("#educationTableBody").append(row);
+
+        });
+
+        function reIndex() {
+
+            $("#educationTableBody tr").each(function (i) {
+
+                $(this).find("input").each(function () {
+
+                    var name = $(this).attr("name");
+
+                    if (name) {
+
+                        name = name.replace(/EducationDetails\[\d+\]/,
+                                            "EducationDetails[" + i + "]");
+
+                        $(this).attr("name", name);
+                    }
+
+                });
+
+            });
+
+        }
+
+    });
+
+</script>

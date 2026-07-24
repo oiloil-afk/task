@@ -1,0 +1,230 @@
+﻿@model Task2.ViewModel.CreateEmployeeViewModel
+
+<div class="container mt-5 card p-4">
+
+    <h3>Add Education Details</h3>
+
+    <div class="row mb-3">
+        <div class="col-md-3">
+            <label class="form-label">Institution</label>
+        </div>
+        <div class="col-md-5">
+            <input type="text" id="Institution" class="form-control" placeholder="Enter Institution" />
+        </div>
+    </div>
+
+
+
+    <div class="row mb-3">
+        <div class="col-md-3">
+            <label class="form-label">Degree</label>
+        </div>
+        <div class="col-md-5">
+            <input type="text" id="Degree" class="form-control" placeholder="Enter Degree" />
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-3">
+            <label class="form-label">Percentage</label>
+        </div>
+        <div class="col-md-5">
+            <input type="number" id="Percentage" step="0.01" class="form-control" placeholder="Enter Percentage" />
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-3">
+            <label class="form-label">Year Of Passing</label>
+        </div>
+        <div class="col-md-5">
+            <input type="number" id="YearOfPassing" class="form-control" placeholder="Enter Year" />
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-3">
+            <label class="form-label">From</label>
+        </div>
+        <div class="col-md-5">
+            <input type="date" id="From" class="form-control" />
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-3">
+            <label class="form-label">To</label>
+        </div>
+        <div class="col-md-5">
+            <input type="date" id="To" class="form-control" />
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-8 text-end">
+            <button type="button" id="btnAdd" class="btn btn-primary">Add</button>
+        </div>
+    </div>
+
+    
+    <h4 class="mt-5">Education Details</h4>
+    <table class="table table-bordered" id="educationTable">
+        <thead class="table-dark">
+            <tr>
+                <th>Institution</th>
+                <th>Degree</th>
+                <th>Percentage</th>
+                <th>Year</th>
+                <th>From</th>
+                <th>To</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody id="educationTableBody">
+        </tbody>
+    </table>
+
+   
+    <div id="hiddenFields"></div>
+
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        console.log("=== Education Details Script Loaded ===");
+
+        const btnAdd = document.getElementById('btnAdd');
+        const institutionInput = document.getElementById('Institution');
+        const degreeInput = document.getElementById('Degree');
+        const percentageInput = document.getElementById('Percentage');
+        const yearInput = document.getElementById('YearOfPassing');
+        const fromInput = document.getElementById('From');
+        const toInput = document.getElementById('To');
+        const tableBody = document.getElementById('educationTableBody');
+        const hiddenFields = document.getElementById('hiddenFields');
+
+        console.log("Elements check:", {
+            btnAdd: !!btnAdd,
+            institutionInput: !!institutionInput,
+            degreeInput: !!degreeInput,
+            percentageInput: !!percentageInput,
+            yearInput: !!yearInput,
+            fromInput: !!fromInput,
+            toInput: !!toInput,
+            tableBody: !!tableBody,
+            hiddenFields: !!hiddenFields
+        });
+
+        if (!btnAdd) {
+            console.error("ERROR: Add button not found!");
+            return;
+        }
+
+
+        btnAdd.addEventListener('click', function (e) {
+            e.preventDefault();
+            console.log(">>> Add button clicked <<<");
+
+            let institution = institutionInput.value.trim();
+            let degree = degreeInput.value.trim();
+            let percentage = percentageInput.value.trim();
+            let year = yearInput.value.trim();
+            let from = fromInput.value.trim();
+            let to = toInput.value.trim();
+
+            console.log("Input values:", { institution, degree, percentage, year, from, to });
+
+            if (!institution || !degree || !percentage || !year || !from || !to) {
+                alert("Please fill all fields");
+                console.log("Validation failed - empty field");
+                return;
+            }
+
+            console.log("Validation passed - adding row");
+
+
+            let row = document.createElement('tr');
+            row.innerHTML = `
+                <td><input type="text" class="form-control edu-institution" value="${institution}" /></td>
+                <td><input type="text" class="form-control edu-degree" value="${degree}" /></td>
+                <td><input type="number" class="form-control edu-percentage" step="0.01" value="${percentage}" /></td>
+                <td><input type="number" class="form-control edu-year" value="${year}" /></td>
+                <td><input type="date" class="form-control edu-from" value="${from}" /></td>
+                <td><input type="date" class="form-control edu-to" value="${to}" /></td>
+                <td><button type="button" class="btn btn-danger btn-sm btn-delete">Delete</button></td>
+            `;
+
+            tableBody.appendChild(row);
+            console.log("✓ Row added to table successfully");
+
+
+            institutionInput.value = "";
+            degreeInput.value = "";
+            percentageInput.value = "";
+            yearInput.value = "";
+            fromInput.value = "";
+            toInput.value = "";
+            institutionInput.focus();
+
+            updateHiddenFields();
+        });
+
+    
+        tableBody.addEventListener('click', function (e) {
+            if (e.target.classList.contains('btn-delete')) {
+                console.log("Delete button clicked");
+                e.target.closest('tr').remove();
+                updateHiddenFields();
+            }
+        });
+
+    
+        function updateHiddenFields() {
+            hiddenFields.innerHTML = "";
+            let rows = tableBody.querySelectorAll('tr');
+
+            rows.forEach(function (row, index) {
+                let institution = row.querySelector('.edu-institution').value;
+                let degree = row.querySelector('.edu-degree').value;
+                let percentage = row.querySelector('.edu-percentage').value;
+                let year = row.querySelector('.edu-year').value;
+                let from = row.querySelector('.edu-from').value;
+                let to = row.querySelector('.edu-to').value;
+
+                console.log(`Row ${index}:`, { institution, degree, percentage, year, from, to });
+
+                hiddenFields.innerHTML += `
+                    <input type="hidden" name="EducationDetails[${index}].Institution" value="${institution}" />
+                    <input type="hidden" name="EducationDetails[${index}].Degree" value="${degree}" />
+                    <input type="hidden" name="EducationDetails[${index}].Percentage" value="${percentage}" />
+                    <input type="hidden" name="EducationDetails[${index}].YearOfPassing" value="${year}" />
+                    <input type="hidden" name="EducationDetails[${index}].From" value="${from}" />
+                    <input type="hidden" name="EducationDetails[${index}].To" value="${to}" />
+                `;
+            });
+
+            console.log("✓ Hidden fields updated:", rows.length, "rows");
+            console.log("Hidden fields HTML:", hiddenFields.innerHTML);
+        }
+
+        tableBody.addEventListener('change', function (e) {
+            if (e.target.classList.contains('edu-institution') ||
+                e.target.classList.contains('edu-degree') ||
+                e.target.classList.contains('edu-percentage') ||
+                e.target.classList.contains('edu-year') ||
+                e.target.classList.contains('edu-from') ||
+                e.target.classList.contains('edu-to')) {
+                updateHiddenFields();
+            }
+        });
+
+                   
+        let form = document.querySelector('form');
+        if (form) {
+            form.addEventListener('submit', function () {
+                updateHiddenFields();
+                console.log("✓ Form submitting with education data");
+            });
+        }
+    });
+</script>

@@ -1,0 +1,445 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model Task2.ViewModel.CreateEmployeeViewModel
+<form method="post">
+    <div class="d-flex justify-content-between align-content-center">
+        <button type="submit" class="btn btn-primary" id="submit">Save</button>
+        <a asp-controller="Employee" asp-action="Index" class="btn btn-secondary">Back</a>
+    </div>
+
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="alert alert-danger">
+            <strong>Validation Errors:</strong>
+            <ul>
+                @foreach (var modelState in ViewData.ModelState.Values)
+                {
+                    foreach (var error in modelState.Errors)
+                    {
+                        <li>@error.ErrorMessage</li>
+                    }
+                }
+            </ul>
+        </div>
+    }
+
+    <div class="container mt-3 card p-3">
+
+        <h2>Add Employee</h2>
+
+        <div class="row justify-content-between">
+
+            <div class="col-md-5">
+
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Employee Code</label>
+                    </div>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" asp-for="Employee.EmployeeCode" />
+                        <span asp-validation-for="Employee.EmployeeCode" class="text-danger"></span>
+                    </div>
+                </div>
+
+
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Name</label>
+                    </div>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" asp-for="Employee.Name" />
+                        <span asp-validation-for="Employee.Name" class="text-danger"></span>
+                    </div>
+                </div>
+
+
+
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Email</label>
+                    </div>
+                    <div class="col-md-8">
+                        <input type="email" class="form-control" asp-for="Employee.Email" />
+                        <span asp-validation-for="Employee.Email" class="text-danger"></span>
+                    </div>
+                </div>
+
+
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Password</label>
+                    </div>
+                    <div class="col-md-8">
+                        <input type="password" class="form-control" asp-for="Employee.Password" />
+                        <span asp-validation-for="Employee.Password" class="text-danger"></span>
+                    </div>
+                </div>
+
+
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Phone</label>
+                    </div>
+                    <div class="col-md-8">
+                        <input type="tel" class="form-control" asp-for="Employee.Phone" />
+                        <span asp-validation-for="Employee.Phone" class="text-danger"></span>
+                    </div>
+                </div>
+
+            </div>
+
+
+
+            <div class="col-md-5">
+
+
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Age</label>
+                    </div>
+                    <div class="col-md-8">
+                        <input type="number" class="form-control" asp-for="Employee.Age" />
+                        <span asp-validation-for="Employee.Age" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Date of Birth</label>
+                    </div>
+                    <div class="col-md-8">
+                        <input type="date" class="form-control" asp-for="Employee.DateOfBirth" />
+                        <span asp-validation-for="Employee.DateOfBirth" class="text-danger"></span>
+                    </div>
+                </div>
+
+
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Date of Joining</label>
+                    </div>
+                    <div class="col-md-8">
+                        <input type="date" class="form-control" asp-for="Employee.DateOfJoining" />
+                        <span asp-validation-for="Employee.DateOfJoining" class="text-danger"></span>
+                    </div>
+                </div>
+
+
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Office Time</label>
+                    </div>
+                    <div class="col-md-8">
+                        <input type="time" class="form-control" asp-for="Employee.OfficeTime" />
+                        <span asp-validation-for="Employee.OfficeTime" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Department</label>
+                    </div>
+                    <div class="col-md-8">
+                        <select class="form-control" asp-for="Employee.Department_Id"
+                                asp-items="@(new SelectList(ViewBag.Departments, "Id", "Name"))">
+                            <option value="">-- Select Department --</option>
+                        </select>
+                    </div>
+                </div>
+
+               
+
+
+
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Gender</label>
+                    </div>
+
+                    <div class="col-md-8">
+
+                        <div class="form-check">
+                            <input class="form-check-input"
+                                   type="radio"
+                                   id="male"
+                                   asp-for="Employee.Gender"
+                                   value="Male" />
+                            <label class="form-check-label" for="male">
+                                Male
+                            </label>
+                        </div>
+
+
+                        <div class="form-check">
+                            <input class="form-check-input"
+                                   type="radio"
+                                   id="female"
+                                   asp-for="Employee.Gender"
+                                   value="Female" />
+                            <label class="form-check-label" for="female">
+                                Female
+                            </label>
+                        </div>
+
+
+                        <div class="form-check">
+                            <input class="form-check-input"
+                                   type="radio"
+                                   id="others"
+                                   asp-for="Employee.Gender"
+                                   value="Others" />
+                            <label class="form-check-label" for="others">
+                                Others
+                            </label>
+                        </div>
+
+                        <span asp-validation-for="Employee.Gender" class="text-danger"></span>
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <partial name="_Create.cshtml" model="Model" />
+
+</div>
+
+</form>
+@section Scripts
+{
+
+    <script>
+
+           
+
+        
+     
+        $(document).ready(function () {
+
+                     $("#EmployeeCode").keyup(function () {
+
+                    var code = $(this).val();
+
+                    if (!/^[0-9]*$/.test(code)) {
+                        $("span[data-valmsg-for='EmployeeCode']").text("Employee Code should contain only numbers");
+                    }
+                    else {
+                        $("span[data-valmsg-for='EmployeeCode']").text("");
+                    }
+
+                });
+                        $("#Name").keyup(function () {
+
+                    var name = $(this).val().trim();
+
+                    if (name == "") {
+                        $("span[data-valmsg-for='Name']").text("Name is required");
+                    }
+                    else if (!/^[A-Za-z ]+$/.test(name)) {
+                        $("span[data-valmsg-for='Name']").text("Employee Name should contain only alphabets");
+                    }
+                    else {
+                        $("span[data-valmsg-for='Name']").text("");
+                    }
+
+                });
+
+
+               $("#Email").keyup(function () {
+
+            var email = $(this).val();
+
+            if (email == "") {
+                $("span[data-valmsg-for='Email']").text("Email is required");
+            }
+            else if (!email.includes("@@")) {
+                $("span[data-valmsg-for='Email']").text("Email must contain @@");
+            }
+            else if (!email.includes(".")) {
+                $("span[data-valmsg-for='Email']").text("Email must contain .");
+            }
+            else {
+                $("span[data-valmsg-for='Email']").text("");
+            }
+
+        });
+                    $("#Password").keyup(function () {
+
+            var password = $(this).val();
+
+            if(password=="")
+            {
+                $("span[data-valmsg-for='Password']")
+                .text("Password is required");
+            }
+            else if(password.length < 8)
+            {
+                $("span[data-valmsg-for='Password']")
+                .text("Minimum 8 characters required");
+            }
+            else if(!/[A-Z]/.test(password))
+            {
+                $("span[data-valmsg-for='Password']")
+                .text("At least one uppercase letter required");
+            }
+            else if(!/[0-9]/.test(password))
+            {
+                $("span[data-valmsg-for='Password']")
+                .text("At least one number required");
+            }
+            else
+            {
+                $("span[data-valmsg-for='Password']").text("");
+            }
+
+        });
+
+                $("#Phone").keyup(function () {
+
+            var phone = $(this).val();
+
+            if(phone == "")
+            {
+                $("span[data-valmsg-for='Phone']").text("Phone is required");
+            }
+            else if(!/^[0-9]+$/.test(phone))
+            {
+                $("span[data-valmsg-for='Phone']").text("Phone should contain only numbers");
+            }
+            else if(phone.length != 10)
+            {
+                $("span[data-valmsg-for='Phone']").text("Phone number must be 10 digits");
+            }
+            else
+            {
+                $("span[data-valmsg-for='Phone']").text("");
+            }
+
+        });
+
+                $("#Age").keyup(function () {
+
+            var age = $(this).val();
+
+            if(age == "")
+            {
+                $("span[data-valmsg-for='Age']").text("Age is required");
+            }
+            else if(age < 18)
+            {
+                $("span[data-valmsg-for='Age']").text("Age must be above 18");
+            }
+            else if(age > 60)
+            {
+                $("span[data-valmsg-for='Age']").text("Age must be below 60");
+            }
+            else
+            {
+                $("span[data-valmsg-for='Age']").text("");
+            }
+
+        });
+
+                $("#DateOfBirth").change(function () {
+
+            var dob = $(this).val();
+
+            if(dob == "")
+            {
+                $("span[data-valmsg-for='DateOfBirth']")
+                .text("Date of Birth is required");
+            }
+            else
+            {
+                $("span[data-valmsg-for='DateOfBirth']").text("");
+            }
+
+        });
+
+                $("#DateOfJoining").change(function(){
+
+            var doj = $(this).val();
+
+            if(doj == "")
+            {
+                $("span[data-valmsg-for='DateOfJoining']")
+                .text("Date of Joining is required");
+            }
+            else
+            {
+                $("span[data-valmsg-for='DateOfJoining']").text("");
+            }
+
+        });
+                $("#OfficeTime").change(function(){
+
+            var time = $(this).val();
+
+            if(time == "")
+            {
+                $("span[data-valmsg-for='OfficeTime']")
+                .text("Office Time is required");
+            }
+            else
+            {
+                $("span[data-valmsg-for='OfficeTime']").text("");
+            }
+
+        });
+
+                $("input[name='Gender']").change(function(){
+
+            if($("input[name='Gender']:checked").length == 0)
+            {
+                $("span[data-valmsg-for='Gender']")
+                .text("Please select Gender");
+            }
+            else
+            {
+                $("span[data-valmsg-for='Gender']").text("");
+            }
+
+        });
+
+            $("#submit").click(function (e) {
+
+                e.preventDefault();
+
+                  if($(".text-danger").text() != "")
+        {
+            alert("Please fix  errors");
+            return;
+        }
+
+                       $.ajax({
+            url: "/Employee/Create",
+            type: "POST",
+            data: $("form").serialize(),
+            success: function () {
+                alert("Employee saved successfully");
+                window.location.href = "/Employee/Index";
+            },
+            error: function () {
+                alert("Error while saving employee");
+            }
+        });
+
+
+            });
+
+        });
+
+            
+
+    </script>
+
+}

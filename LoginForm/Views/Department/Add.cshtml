@@ -1,0 +1,59 @@
+﻿@model LoginForm.Models.Department
+
+<form asp-action="Add" method="post">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <button type="submit" class="btn btn-primary">
+            Save
+        </button>
+
+        <a asp-action="Index" class="btn btn-dark">
+            Back
+        </a>
+    </div>
+
+    <div class="card p-4">
+
+        <h3 class="mb-4">Add Department</h3>
+
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+        <div class="row">
+
+
+            <div class="col-md-6">
+
+                <div class="row mb-3">
+                    <label asp-for="code" class="col-md-3 col-form-label"></label>
+                    <div class="col-md-8">
+                        <input asp-for="code" class="form-control" />
+                        <span asp-validation-for="code" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label asp-for="Name" class="col-md-3 col-form-label"></label>
+                    <div class="col-md-8">
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                </div>
+
+               
+
+                <div class="row mb-3">
+                    <label asp-for="isActive" class="col-md-3 col-form-label"></label>
+                    <div class="col-md-8 pt-2">
+                        <input asp-for="isActive" class="form-check-input" />
+                        <span asp-validation-for="isActive" class="text-danger"></span>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</form>
+

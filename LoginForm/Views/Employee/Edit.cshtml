@@ -1,0 +1,184 @@
+﻿@model Task2.ViewModel.CreateEmployeeViewModel
+
+<div class="container mt-5 card p-4">
+
+    <h2>Edit Employee</h2>
+    <hr />
+
+    <form>
+
+        <input type="hidden" asp-for="Employee.Id" />
+
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label>Employee Code</label>
+            </div>
+            <div class="col-md-8">
+                <input class="form-control" asp-for="Employee.EmployeeCode" />
+            </div>
+        </div>
+
+
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label>Name</label>
+            </div>
+            <div class="col-md-8">
+                <input class="form-control" asp-for="Employee.Name" />
+            </div>
+        </div>
+
+
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label>Email</label>
+            </div>
+            <div class="col-md-8">
+                <input class="form-control" asp-for="Employee.Email" />
+            </div>
+        </div>
+
+
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label>Password</label>
+            </div>
+            <div class="col-md-8">
+                <input class="form-control" asp-for="Employee.Password" />
+            </div>
+        </div>
+
+
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label>Phone</label>
+            </div>
+            <div class="col-md-8">
+                <input class="form-control" asp-for="Employee.Phone" />
+            </div>
+        </div>
+
+
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label>Age</label>
+            </div>
+            <div class="col-md-8">
+                <input class="form-control" asp-for="Employee.Age" />
+            </div>
+        </div>
+
+
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label>Date Of Birth</label>
+            </div>
+            <div class="col-md-8">
+                <input type="date" class="form-control" asp-for="Employee.DateOfBirth" />
+            </div>
+        </div>
+
+
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label>Date Of Joining</label>
+            </div>
+            <div class="col-md-8">
+                <input type="date" class="form-control" asp-for="Employee.DateOfJoining" />
+            </div>
+        </div>
+
+
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label>Office Time</label>
+            </div>
+
+            <div class="col-md-8">
+                <input type="time" class="form-control" asp-for="Employee.OfficeTime" />
+            </div>
+        </div>
+
+
+        <div class="row mb-3">
+
+            <div class="col-md-4">
+                <label>Gender</label>
+            </div>
+
+            <div class="col-md-8">
+
+                <input type="radio"
+                       asp-for="Employee.Gender"
+                       value="Male" />
+                Male
+
+
+                <input type="radio"
+                       asp-for="Employee.Gender"
+                       value="Female" />
+                Female
+
+
+                <input type="radio"
+                       asp-for="Employee.Gender"
+                       value="Others" />
+                Others
+
+            </div>
+        </div>
+        <partial name="_EditEducation.cshtml" model="Model" />
+
+        
+        <button type="button" id="submit" class="btn btn-primary">
+            Update
+        </button>
+
+
+        <a asp-action="Index"
+           class="btn btn-secondary">
+            Back
+        </a>
+    </form>
+
+</div>
+
+
+@section Scripts
+{
+    <script>
+        $("#submit").click(function (e) {
+
+            e.preventDefault();
+            var i = $("form").serialize();
+            $.ajax({
+
+                url: "/Employee/Edit",
+
+                type: "POST",
+
+                data: i,
+
+                success: function (response) {
+
+                    if (response.success) {
+
+                        alert(response.message);
+                        window.location.href = "/Employee/Index";
+
+                    } else {
+
+                        alert(response.message);
+                    }
+                },
+
+                error: function () {
+
+                    alert("Server Error");
+                }
+
+            });
+
+        });
+    </script>
+}
