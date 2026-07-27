@@ -1,5 +1,7 @@
 using LoginForm.Data;
+using LoginForm.Interfaces;
 using LoginForm.Models;
+using LoginForm.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,6 +17,8 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
 
+
+builder.Services.AddScoped<IDepartment,DepartmentService>();
 
 builder.Services.AddScoped<IPasswordHasher<Employee>, PasswordHasher<Employee>>();
 var app = builder.Build();

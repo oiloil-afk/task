@@ -1,4 +1,5 @@
 ﻿using LoginForm.Data;
+using LoginForm.Interfaces;
 using LoginForm.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,14 +12,16 @@ namespace LoginForm.Controllers
     {
         public readonly ApplicationDbContext _dataContext;
 
-        public DepartmentController(ApplicationDbContext dataContext)
+        private readonly IDepartment _department;
+        public DepartmentController(ApplicationDbContext dataContext,IDepartment department)
         {
             _dataContext = dataContext;
+            _department = department;
         }
         [HttpGet]
         public IActionResult Index(Department department)
         {
-            var dep = _dataContext.Departments.ToList();
+            var dep = _department.GetAllDepartment(); 
             return View(dep);
         }
 
@@ -35,8 +38,8 @@ namespace LoginForm.Controllers
             {
                 department.Createdby = User.Identity.Name;
                 department.CreatedDate = DateOnly.FromDateTime(DateTime.Now);
-                _dataContext.Departments.Add(department);
-                _dataContext.SaveChanges();
+
+                _department.AddDepartment(department);
                 return Redirect("Index");
             }
             return View();
@@ -45,7 +48,7 @@ namespace LoginForm.Controllers
         [HttpGet]
         public IActionResult Edit(Guid Id)
         {
-            var dep = _dataContext.Departments.FirstOrDefault(x => x.Id == Id);
+            var dep = _department.GetEdit( Id);
             return View(dep);
         }
 

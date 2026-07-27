@@ -1,4 +1,5 @@
-﻿using LoginForm.Data;
+﻿using BCrypt.Net;
+using LoginForm.Data;
 using LoginForm.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -46,6 +47,10 @@ namespace LoginForm.Controllers
                 {
                     return View(viewModel);
                 }
+
+                string pass = BCrypt.Net.BCrypt.HashPassword(viewModel.Employee.Password);
+
+                viewModel.Employee.Password = pass;
 
                 var employee = viewModel.ToEmployeeEntity();
 

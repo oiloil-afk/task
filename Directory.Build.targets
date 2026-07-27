@@ -1,0 +1,7 @@
+﻿<Project>
+  <!-- Completely override the Git tasks to prevent failures -->
+  <Target Name="GatherGitMetadata" />
+  <Target Name="GetGitMetadata" />
+  <Target Name="InitializeSourceControlInformationFromSourceControlManager" />
+  <Target Name="EmbedUntrackedSources" />
+</Project>

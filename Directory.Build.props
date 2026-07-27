@@ -1,0 +1,8 @@
+﻿<Project>
+  <PropertyGroup>
+    <GenerateGitMetadata>false</GenerateGitMetadata>
+    <EnableSourceLink>false</EnableSourceLink>
+    <SourceControlInformationFeatureSupported>false</SourceControlInformationFeatureSupported>
+    <EmbedUntrackedSources>false</EmbedUntrackedSources>
+  </PropertyGroup>
+</Project>
