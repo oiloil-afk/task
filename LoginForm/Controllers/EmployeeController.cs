@@ -1,5 +1,6 @@
 ﻿using BCrypt.Net;
 using LoginForm.Data;
+using LoginForm.Interfaces;
 using LoginForm.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -15,25 +16,26 @@ namespace LoginForm.Controllers
         private readonly ApplicationDbContext _context;
 
         public readonly IPasswordHasher<Employee> _passwordHasher;
-        public EmployeeController(ApplicationDbContext context,IPasswordHasher<Employee> passwordHasher)
+
+        public readonly IEmployee _employee;
+        public EmployeeController(ApplicationDbContext context,IPasswordHasher<Employee> passwordHasher , IEmployee employee)
         {
             _context = context;
             _passwordHasher = passwordHasher;
+            _employee = employee;
         }
 
         [HttpGet]
         public IActionResult Index()
         {
-            var employees = _context.Employees.Include(e => e.EducationDetails).ToList();
+            var employees = _employee.GetEmployee();
             return View(employees);
         }
-
-
 
         [HttpGet]
         public IActionResult Create()
         {
-            ViewBag.Departments = _context.Departments.ToList();
+            ViewBag.Departments = _employee.GetDepartment();
             var viewModel = new CreateEmployeeViewModel();
             return View(viewModel);
         }
@@ -54,8 +56,7 @@ namespace LoginForm.Controllers
 
                 var employee = viewModel.ToEmployeeEntity();
 
-                _context.Employees.Add(employee);
-                _context.SaveChanges();
+                _employee.AddEmployee(employee);
 
                 return RedirectToAction("Index");
             }
@@ -69,7 +70,7 @@ namespace LoginForm.Controllers
         [HttpGet]
         public IActionResult Edit(Guid id)
         {
-            var employee = _context.Employees.Include(e => e.EducationDetails).FirstOrDefault(e => e.Id == id);
+            var employee = _employee.GetEdit(id);
 
             if (employee == null)
             {
@@ -88,41 +89,12 @@ namespace LoginForm.Controllers
                 return Json(new { success = false, message = "Validation failed. Please check the form." });
             }
 
-            var employee = _context.Employees.Include(e => e.EducationDetails).FirstOrDefault(e => e.Id == viewModel.Employee.Id);
+            bool updated = _employee.UpdateEmployee(viewModel);
 
-            employee.EmployeeCode = viewModel.Employee.EmployeeCode;
-            employee.Name = viewModel.Employee.Name;
-            employee.Email = viewModel.Employee.Email;
-            employee.Password = _passwordHasher.HashPassword(employee,viewModel.Employee.Password);
-            employee.Phone = viewModel.Employee.Phone;
-            employee.Age = viewModel.Employee.Age;
-            employee.DateOfBirth = viewModel.Employee.DateOfBirth;
-            employee.DateOfJoining = viewModel.Employee.DateOfJoining;
-            employee.OfficeTime = viewModel.Employee.OfficeTime;
-            employee.Gender = viewModel.Employee.Gender;
-
-            if (viewModel.EducationDetails != null)
+            if (!updated)
             {
-                foreach (var edu in viewModel.EducationDetails)
-                {
-                    if (edu.Id != Guid.Empty)
-                    {
-                        var existing = employee.EducationDetails.FirstOrDefault(x => x.Id == edu.Id);
-
-                        if (existing != null)
-                        {
-                            existing.Institution = edu.Institution;
-                            existing.Degree = edu.Degree;
-                            existing.Percentage = edu.Percentage;
-                            existing.YearOfPassing = edu.YearOfPassing;
-                            existing.From = edu.From;
-                            existing.To = edu.To;
-                        }
-                    }
-                }
+                return Json(new { success = false, message = "Employee not found" });
             }
-
-            _context.SaveChanges();
 
             return Json(new { success = true, message = "Employee Updated Successfully" });
         }
@@ -130,7 +102,7 @@ namespace LoginForm.Controllers
         [HttpGet]
         public IActionResult Delete(Guid id)
         {
-            var employee = _context.Employees.Find(id);
+            var employee = _employee.GetDelete(id);
             if (employee == null)
             {
                 return NotFound();
@@ -142,34 +114,27 @@ namespace LoginForm.Controllers
         [ActionName("Delete")]
         public IActionResult DeleteCofirmed(Guid id)
         {
-            var employee = _context.Employees.Find(id);
-            if (employee != null)
+            bool deleted = _employee.DeleteEmployee(id);
+
+            if (deleted)
             {
-                _context.Employees.Remove(employee);
-                _context.SaveChanges();
-                return Json(new
-                {
-                    success = true,
-                    message = "Employee Deleted Successfully"
-                });
+                return Json(new { success = true, message = "Employee Deleted Successfully" });
             }
-            return Json(new
-            {
-                success = false,
-                message = "Employee not found"
-            });
+
+            return Json(new { success = false, message = "Employee not found" });
         }
 
         [HttpGet]
         public IActionResult Details(Guid id)
         {
-            var employee = _context.Employees.Include(e => e.EducationDetails).FirstOrDefault(e => e.Id == id);
+            var employee = _employee.GetDetails(id);
             if (employee == null)
             {
                 return NotFound();
             }
             return PartialView("Details", employee);
-
         }
+
+
     }
 }
